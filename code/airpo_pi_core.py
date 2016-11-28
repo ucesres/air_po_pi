@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 import Adafruit_DHT
 import time
