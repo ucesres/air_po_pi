@@ -54,3 +54,13 @@ y= mx+b
 ln(rs/1000) = -0.75325319ln(lux) +4.57666882
 lux = e**theta
 theta = (ln(Rs/1000) - 4.57666882)/-0.75325319
+
+
+
+
+# all other info should be stored if in the right directory
+# may need to re-enter username and password
+
+git add .
+git commit -m "reference"
+git push -u origin master

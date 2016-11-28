@@ -51,12 +51,16 @@ GPIO.setup(SPICS, GPIO.OUT)
 sensor_adc = 3;
 vin=5
 pull_down_resistance = 131
+pull_up_resistance = 131
+
 while True:
 	# read the analog pin
 	read_pin = readadc(sensor_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
 	vout = read_pin/1023. *vin
 	result =(pull_down_resistance *vin)/vout - pull_down_resistance
+	rsro1=pull_up_resistance /((vin/vout)-1)
 	if DEBUG:
 		print "MICS_2714:", read_pin 
 		print "rs", result
+		print "up", rsro1
 	time.sleep(1)

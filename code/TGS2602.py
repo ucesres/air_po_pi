@@ -59,8 +59,8 @@ while True:
 	result =((pull_down_resistance *vin)/vout) - pull_down_resistance
 	rs2 = (vin/result-1)*22000
 	if DEBUG:
-		print "TGS2602:", read_pin 
-		print "rs", result
-		print "rs2", rs2
+		print "TGS2602:", vout
+		#print "rs", result
+		#print "rs2", rs2
 	time.sleep(1)
 
