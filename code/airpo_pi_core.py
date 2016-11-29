@@ -38,7 +38,7 @@ while True:
 	co2_rs_ro = analogue_readings('co2')
 	co2_ppm = 116.6020682 *((co2_rs_ro/49395270.0633941)**-2.769034857)
 	co2_fields = [timestamp, co2_ppm]
-	#print "co2", co2_ppm
+	print "co2", co2_ppm
 	with open(r'/home/pi/projects/Air_po_pi/data/co2.csv', 'a') as g:
 					writer = csv.writer(g)
 					writer.writerow(co2_fields)
