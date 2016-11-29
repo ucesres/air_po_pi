@@ -42,13 +42,14 @@ while True:
 	with open(r'/home/pi/projects/Air_po_pi/data/co2.csv', 'a') as g:
 					writer = csv.writer(g)
 					writer.writerow(co2_fields)
+					print co2_fields
 	
 	lux_rs_ro = analogue_readings('lux')
 	theta = (numpy.log(lux_rs_ro/1000) -4.57666882)/-0.75325319
 	# 10.76 converts from ftc to lux, see datasheet
 	lux = math.exp(theta) *10.76
 	lux_fields = [timestamp,lux]
-	print lux
+	#print lux
 	with open(r'/home/pi/projects/Air_po_pi/data/lux.csv', 'a') as h:
 					writer = csv.writer(h)
 					writer.writerow(lux_fields)
