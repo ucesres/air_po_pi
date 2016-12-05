@@ -16,15 +16,11 @@ ppm = 116.6020682 (Rs/Ro)^-2.769034857
 
 assuming that the value initially shown by the sensor
 1450 = 116.6020682*((50308/Ro)**-2.769034857)
-
 Ro = 19877551 *exp(ln(116.6020682/1450)/-2.769034857)
 
 #using python syntax
 Ro =19877551*(math.exp(numpy.log(116.6020682/1450)/-2.769034857))
-
 Ro = 49395270.0633941
-
-
 ppm = 116.6020682 (Rs/49395270.0633941)**-2.769034857
 
 
@@ -57,10 +53,32 @@ theta = (ln(Rs/1000) - 4.57666882)/-0.75325319
 
 
 
-
+# to push code for readings
 # all other info should be stored if in the right directory
 # may need to re-enter username and password
 
 git add .
 git commit -m "reference"
 git push -u origin master
+
+# initial push to gh-pages
+git init
+git add .
+git commit -m "ref"
+git remote add origin https://github.com/ucesres/room_1.06.git
+git push -f origin master:gh-pages
+
+# to update
+git add .
+git commit -m "ref"
+git push -f origin master:gh-pages?
+# launcher_5min.sh for auto git update
+# need to set user name and email in the config fule of the local .git directory
+
+*/5 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_5min.sh >/home/pi/logs/cronlog 2>&1
+
+*/30 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_30min.sh >/home/pi/logs/cronlog 2>&1
+
+0 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_1hour.sh >/home/pi/logs/cronlog 2>&1
+
+30 9 * * * sh /home/pi/projects/Air_po_pi/code/launcher_daily.sh >/home/pi/logs/cronlog 2>&1

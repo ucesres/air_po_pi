@@ -61,6 +61,7 @@ while True:
 	read_pin = readadc(sensor_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
 	vout = read_pin/1023. *vin
 	result =(pull_down_resistance *vin)/vout - pull_down_resistance
+	print result
 	#result =pull_up_resistance /((vin/vout)-1)
 	"""
 	VREF = 5.
@@ -77,7 +78,9 @@ while True:
 	#sensor ppm
 	ppm = 116.6020682* ((rs/14560.415944987377)**-2.769034857)
 	"""
-	ppm = 116.6020682 *((result/49395270.0633941)**-2.769034857)
+	t_rh_correction = 1
+	# lower correction increases ppm
+	ppm = 116.6020682 *(((result/42403066.59595728)*t_rh_correction)**-2.769034857)
 
 	if DEBUG:
 		print "MQ135:", read_pin 

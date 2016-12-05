@@ -17,12 +17,16 @@ def analogue_readings(name):
 	sett = analogue_settings[name]
 	read_pin = readadc(sett[0], SPICLK, SPIMOSI, SPIMISO, SPICS)
 	vout = read_pin/1023. *sett[1]
-	if sett[2] !=0:
-		result =(sett[2] *sett[1])/vout - sett[2]
+	numpy.errstate(divide='ignore')
+	if vout not in [sett[1], 0.0]:
+		if sett[2] !=0:
+			result =(sett[2] *sett[1])/vout - sett[2]
+		else:
+			result = sett[3]/((sett[1]/vout)-1)
+			
+		return result
 	else:
-		result = sett[3]/((sett[1]/vout)-1)
-		
-	return result
+		return 100
 	
 while True:
 	timestamp = datetime.datetime.now()
@@ -35,14 +39,21 @@ while True:
 					writer = csv.writer(f)
 					writer.writerow(fields)
 	
-	co2_rs_ro = analogue_readings('co2')
-	co2_ppm = 116.6020682 *((co2_rs_ro/49395270.0633941)**-2.769034857)
+	co2_rs_ro = analogue_readings('co2') 
+	
+	#print co2_rs_ro
+	# this does not include a temperature correction as the range is very small across the temperatures
+	# experienced in room 1.06 - see calibratiion.ipynb for further work
+	if co2_rs_ro >0.0:
+		co2_ppm = 116.6020682 *(((co2_rs_ro/42403066))**-2.769034857)
+	else:
+		co2_ppm = 0
 	co2_fields = [timestamp, co2_ppm]
-	print "co2", co2_ppm
+	#print "co2", co2_ppm
 	with open(r'/home/pi/projects/Air_po_pi/data/co2.csv', 'a') as g:
 					writer = csv.writer(g)
 					writer.writerow(co2_fields)
-					print co2_fields
+					#print co2_fields
 	
 	lux_rs_ro = analogue_readings('lux')
 	theta = (numpy.log(lux_rs_ro/1000) -4.57666882)/-0.75325319
