@@ -44,7 +44,7 @@ def co2_plt(co2, plot_name):
 """CO2 plotting"""
 co2  = co2[co2.co2_ppm<5000]
 co2 = co2[((co2.co2_ppm- co2.co2_ppm.mean()) / co2.co2_ppm.std()).abs() < 3]
-co2  = co2[co2.index!=0]
+co2  = co2[co2.index>45000]
 
 co2 = co2.dropna(axis=0)
 cdts = []
@@ -62,15 +62,15 @@ co2_plt(co2_this_month,'co2_this_month')
     
 trace1 = go.Histogram(x=co2['co2_ppm'].values,opacity=0.75, name = 'co2 pm')
 data = [trace1]
-layout = go.Layout( barmode='overlay', title = 'Lifetime co2 distribution', yaxis = dict(title='Readings'), xaxis = dict(title='co2 ppm'))
+layout = go.Layout( barmode='overlay', title = 'Lifetime CO<sub>2</sub> distribution', yaxis = dict(title='Readings'), xaxis = dict(title='CO<sub>2</sub> ppm'))
 fig = go.Figure(data=data, layout=layout)
 plotly.offline.plot(fig, filename = '/home/pi/projects/web_pi/histogram_co2.html', auto_open =False)  
 
 """Lux plotting"""
 lux  = lux[lux.lux<1000]
 lux = lux[((lux.lux- lux.lux.mean()) / lux.lux.std()).abs() < 3]
-# remove first row - with false values
-lux = lux[lux.index!=0]
+# remove first set of not terribly well calibrated values
+lux = lux[lux.index>45000]
 lux = lux.dropna(axis=0)
 ldts = []
 for i in lux['timestamp'].values:
@@ -100,8 +100,8 @@ h_T  = h_T[h_T.temperature<50]
 humid = h_T[((h_T.humidity- h_T.humidity.mean()) / h_T.humidity.std()).abs() < 3]
 temp = h_T[((h_T.temperature- h_T.temperature.mean()) / h_T.temperature.std()).abs() < 3]
 # remove first row - with false values - could use  range to remove proto values
-humid = humid[humid.index!=0]
-temp = temp[temp.index!=0]
+humid = humid[humid.index> 45000]
+temp = temp[temp.index>45000]
 # remove nan
 humid = humid.dropna(axis=0)
 temp = temp.dropna(axis=0)
@@ -136,4 +136,28 @@ data = [trace1]
 layout = go.Layout( barmode='overlay', title = 'Lifetime temperature distribution', yaxis = dict(title='Readings'), xaxis = dict(title='Degrees Centigrade'))
 fig = go.Figure(data=data, layout=layout)
 plotly.offline.plot(fig, filename = '/home/pi/projects/web_pi/histogram_temperature.html', auto_open =False)
+
+from plotly import tools
+def stacked_plot(temp,humid, lux, co2, plot_name):
+    trace = go.Scatter(x=humid['timestamp'].values,y=humid['humidity'].values, name = 'Humidity %')
+    trace1 = go.Scatter(x=temp['timestamp'].values,y=temp['temperature'].values, name = 'Temperature <sup>o</sup>C    ', yaxis='y2')
+    trace2 = go.Scatter(x=lux['timestamp'].values,y=lux['lux'].values, name = 'Lux',xaxis='x2', yaxis='y3')
+    trace3 = go.Scatter(x=co2['timestamp'].values,y=co2['co2_ppm'].values, name = 'CO<sub>2</sub> ppm',xaxis='x3', yaxis='y4')
+    
+    data = [trace,trace1,trace2,trace3]
+    layout = go.Layout(yaxis = dict(title='Humidity %', domain =[0.733,1]), 
+                       yaxis2 = dict(title='Temperature <sup>o</sup>C', overlaying='y',side ='right'),
+                       yaxis3 = dict(title='Lux', domain = [0,0.266]),
+                       yaxis4 = dict(title='CO<sub>2</sub> ppm', domain = [0.366,0.633]),
+                       xaxis2 = dict(anchor='y3')  ,             
+                       xaxis3 = dict(anchor='y4') ,
+                       legend = dict(orientation ="h")             
+                       )
+    fig = go.Figure(data=data, layout=layout)
+    plotly.offline.plot(fig, filename = '/home/pi/projects/web_pi/'+plot_name+'.html', auto_open =False)
+
+stacked_plot(temp_24, humid_24,lux_24,co2_24,'stacked_24_sh')
+    
+
+
 

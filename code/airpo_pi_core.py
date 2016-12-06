@@ -26,7 +26,7 @@ def analogue_readings(name):
 			
 		return result
 	else:
-		return 100
+		return 100.0
 	
 while True:
 	timestamp = datetime.datetime.now()
@@ -40,11 +40,11 @@ while True:
 					writer.writerow(fields)
 	
 	co2_rs_ro = analogue_readings('co2') 
-	
+	print co2_rs_ro
 	#print co2_rs_ro
 	# this does not include a temperature correction as the range is very small across the temperatures
 	# experienced in room 1.06 - see calibratiion.ipynb for further work
-	if co2_rs_ro >0.0:
+	if co2_rs_ro >1.0:
 		co2_ppm = 116.6020682 *(((co2_rs_ro/42403066))**-2.769034857)
 	else:
 		co2_ppm = 0
@@ -58,7 +58,9 @@ while True:
 	lux_rs_ro = analogue_readings('lux')
 	theta = (numpy.log(lux_rs_ro/1000) -4.57666882)/-0.75325319
 	# 10.76 converts from ftc to lux, see datasheet
-	lux = math.exp(theta) *10.76
+	# for now assume a linear correction factor of 1.69 - more readings are probably necessary
+	# test bby dimming lights tomorrow
+	lux = (math.exp(theta) *10.76)*1.69
 	lux_fields = [timestamp,lux]
 	#print lux
 	with open(r'/home/pi/projects/Air_po_pi/data/lux.csv', 'a') as h:

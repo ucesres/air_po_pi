@@ -11,15 +11,18 @@ while True:
 	read_pin = readadc(sensor_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
 	vout = (read_pin/1023.) *vin
 	result =pull_up_resistance /((vin/vout)-1)
+	
 	# values derived from datasheet and numpy polyfit, see coding notes - this may need recalibrating
 	theta = (numpy.log(result/1000) -4.57666882)/-0.75325319
 	# 10.76 converts from ftc to lux, see datasheet
 	lux = math.exp(theta) *10.76
 	
-	simple_lux = ((2500/vout)-500)/2.2
+	#simple_lux = ((2500/vout)-500)/2.2
 	if DEBUG:
 		#print simple_lux
-		print lux
+		print 'vout', vout
+		print 'lux', lux
+		print 'rs', result 
 	
 		#print "vout", vout
 		#

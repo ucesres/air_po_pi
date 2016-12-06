@@ -30,8 +30,8 @@ df_weather.to_csv('/home/pi/projects/Air_po_pi/data/external_weather_data.csv')
 dts = df_weather['ts']
 def plot_timeseries_forecast(df_weather, dts):
 	trace = go.Scatter(x=dts,y=df_weather['humidity'].values, name = 'Humidity %')
-	trace1 = go.Scatter(x=dts,y=df_weather['tempe'].values, name = 'Temperature C', yaxis='y2')
-	layout = go.Layout(yaxis = dict(title='Humidity %'), yaxis2 = dict(title='oC', overlaying='y',side ='right'))
+	trace1 = go.Scatter(x=dts,y=df_weather['tempe'].values, name = 'Temperature <sup>o</sup>C', yaxis='y2')
+	layout = go.Layout(yaxis = dict(title='Humidity %'), yaxis2 = dict(title='Temperature <sup>o</sup>C', overlaying='y',side ='right'))
 	data=[trace, trace1]
 	fig = go.Figure(data=data, layout=layout)
 	plotly.offline.plot(fig, filename = '/home/pi/projects/web_pi//daily_forecast.html', auto_open =False)

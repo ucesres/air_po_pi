@@ -1,6 +1,6 @@
 import os
 import RPi.GPIO as GPIO
-
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM) 
 DEBUG = 1
 # read SPI data from MCP3008 chip, 8 possible adc's (0 thru 7)
