@@ -5,53 +5,7 @@ https://github.com/adafruit/Adafruit_Python_MCP3008
 MQ135 through adc code from here
 http://www.beno.cl/blog/index.php?catid=2&blogid=1
 
-calibrate MQ135 for CO2
-convert sensor output to gas reading
-http://davidegironi.blogspot.co.uk/2014/01/cheap-co2-meter-using-mq135-sensor-with.html
-
-ppm = a*(Rs/Ro)^b
-using the provided graph the values 
-ppm = 116.6020682 (Rs/Ro)^-2.769034857
-
-
-assuming that the value initially shown by the sensor
-1450 = 116.6020682*((50308/Ro)**-2.769034857)
-Ro = 19877551 *exp(ln(116.6020682/1450)/-2.769034857)
-
-#using python syntax
-Ro =19877551*(math.exp(numpy.log(116.6020682/1450)/-2.769034857))
-Ro = 49395270.0633941
-ppm = 116.6020682 (Rs/49395270.0633941)**-2.769034857
-
-
-# mics 2714
-NO2_conc = [10,20,30,40,50,60,70,80,90,100,200,300,400,500,600,700,800,900] 
-rs_ro = [3,4,5.5,8,11,15,19,25,30,35,150,350,800,1100,1900,2500,3500,4500]
-numpy.polyfit(numpy.log10(NO2_conc),numpy.log10(rs_ro),1)
-
-
-
-
-#LDR
-Resistance vs. illumination
-illumination - Footcandles (2854 K)
-1.0 ftc = 10.76 lux
-1.0 lux = 0.093 ftc
-LDR curve fit
-
-rs_ohms = [1100000,100000,10000,1000]
-lux = [0.01,0.3,7.5,100]
-
-
-numpy.polyfit(numpy.log10(lux),numpy.log10(rs_ohms),2)
-array([-0.75325319,  4.57666882])
-
-y= mx+b
-ln(rs/1000) = -0.75325319ln(lux) +4.57666882
-lux = e**theta
-theta = (ln(Rs/1000) - 4.57666882)/-0.75325319
-
-
+# see calibration.ipynb for calibration
 
 # to push code for readings
 # all other info should be stored if in the right directory
@@ -68,17 +22,36 @@ git commit -m "ref"
 git remote add origin https://github.com/ucesres/room_1.06.git
 git push -f origin master:gh-pages
 
-# to update
+# to update gh-pages
 git add .
 git commit -m "ref"
 git push -f origin master:gh-pages?
 # launcher_5min.sh for auto git update
 # need to set user name and email in the config fule of the local .git directory
+[user]
+	name = steady_eddy
+	email = ed.sharp@ucl.ac.uk
 
+# crontab instructions
 */5 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_5min.sh >/home/pi/logs/cronlog 2>&1
-
 */30 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_30min.sh >/home/pi/logs/cronlog 2>&1
-
 0 * * * * sh /home/pi/projects/Air_po_pi/code/launcher_1hour.sh >/home/pi/logs/cronlog 2>&1
-
 30 9 * * * sh /home/pi/projects/Air_po_pi/code/launcher_daily.sh >/home/pi/logs/cronlog 2>&1
+
+
+# to solve issues with missing git crap
+# make a copy of entire folder
+# make a new dir
+# clone the git copy into that dir
+git clone -b gh-pages https://github.com/ucesres/room_1.06.git web_pi
+
+# remove the .git from original dir
+sudo rm -rf .git/
+
+# move the new git into its place
+sudo mv .git/ ../../web_pi
+
+# beware that ther may be issues with the format of the git
+for example the launcher shell had to be changed to remove the reference to the master branch
+
+

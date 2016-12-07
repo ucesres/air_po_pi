@@ -1,9 +1,15 @@
-# task list
-
-
+#task list
+# DONE
 re-calibrate co2 and lux (jupyter)
 api of oustide pollution (jupyter and hourly script)
-weather conditions gif
+Tidy up website
+	- make alerts smaller
+	- change plots to last 4 hours and make smaller
+		- move 24 hour plots to seperate page
+	- auto refresh current values
+	- add picture of air_po_pi
+	
+# todo 
 
 
 No2 senson
@@ -12,10 +18,9 @@ uv sensor
 chase up sensors
 install those sensor
 
-Tidy up website
-	- make alerts smaller
-	- change plots to last 4 hours and make smaller
 
+
+	
 Look at funding
 	- UCLB + advances
 	- Climate KIC

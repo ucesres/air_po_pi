@@ -80,7 +80,7 @@ while True:
 	"""
 	t_rh_correction = 1
 	# lower correction increases ppm
-	ppm = 116.6020682 *(((result/42403066.59595728)*t_rh_correction)**-2.769034857)
+	ppm = 116.6020682 *(((result/31750549)*t_rh_correction)**-2.769034857)
 
 	if DEBUG:
 		print "MQ135:", read_pin 
